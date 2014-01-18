@@ -170,6 +170,10 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+    collection.forEach(function(n) {
+      accumulator = iterator(accumulator, n);
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
