@@ -227,6 +227,16 @@ var _ = { };
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    
+    for(var i = 0; i < collection.length; i++) {
+      if(_.every([collection[i]], iterator)) {
+        return true;
+        break;
+      }
+    }
+    
+    return false;
+    
     // TIP: There's a very clever way to re-use every() here.
   };
 
