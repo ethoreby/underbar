@@ -245,7 +245,7 @@ var _ = { };
    * OBJECTS
    * =======
    *
-   * In this section, we'll look at a couple of helpers for merging objects.
+   * In this section, we'll look at a couple of helpers for merging objects. 
    */
 
   // Extend a given object with all the properties of the passed in
@@ -260,6 +260,16 @@ var _ = { };
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    
+    for(var i = 1; i < arguments.length; i++) {
+      var currObj = arguments[i];
+      var keys = Object.keys(currObj);
+      keys.forEach(function(key) {
+        obj[key] = currObj[key];
+      });
+    }
+    
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
