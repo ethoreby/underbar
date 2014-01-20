@@ -171,8 +171,13 @@ var _ = { };
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
     collection.forEach(function(n) {
-      accumulator = iterator(accumulator, n);
+      accumulator = iterator(n, accumulator);     
     });
+      
+      /*if(accumulator === false) {   //cant use statement like this, because we may need to test for inclusion of 'false';
+        return false;
+      }*/
+      
     return accumulator;
   };
 
@@ -189,7 +194,7 @@ var _ = { };
       collection = values;
     }
     
-    return _.reduce(collection, function(wasFound, item) {
+    return _.reduce(collection, function(item, wasFound) {
       if (wasFound) {
         return true;
       }
@@ -199,6 +204,23 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    
+    if(iterator === undefined) {
+      iterator = _.identity;
+    }
+    
+    for(var i = 0; i < collection.length; i++) {
+      if(!(iterator(collection[i]))) {
+        return false;
+        break;
+      }
+    }
+        
+    return true;
+    
+    //return _.reduce(collection, iterator, true);
+    //Does it make sense to use reduce()? -example: [true,false,true] return true because it iterates through whole array and returns last result
+    
     // TIP: Try re-using reduce() here.
   };
 
