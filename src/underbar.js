@@ -119,6 +119,7 @@ var _ = { };
     for(var i = 0; i < array.length; i++) {
       array[i] = iterator(array[i]);
     }
+    
     return array;
   };
 
@@ -145,14 +146,14 @@ var _ = { };
   _.invoke = function(collection, functionOrKey, args) {
     var result = [];
     
-    for(var i = 0; i < collection.length; i++) {
+    collection.forEach(function(item) {
       
       if(functionOrKey instanceof String || typeof functionOrKey === "string") {
-        result.push(eval("\"" + collection[i] + "\"" + "." + functionOrKey + "()"));
+        result.push(window["String"]["prototype"][functionOrKey].apply(item));
       }else {
-        result.push(functionOrKey.apply(collection[i]));
+        result.push(functionOrKey.apply(item));
       }
-    }
+    });
     return result;
   };
 
@@ -171,7 +172,7 @@ var _ = { };
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
     collection.forEach(function(n) {
-      accumulator = iterator(n, accumulator);     
+      accumulator = iterator(accumulator, n);     
     });
       
       /*if(accumulator === false) {   //cant use statement like this, because we may need to test for inclusion of 'false';
@@ -194,8 +195,8 @@ var _ = { };
       collection = values;
     }
     
-    return _.reduce(collection, function(item, wasFound) {
-      if (wasFound) {
+    return _.reduce(collection, function(wasFound, item) {
+      if(wasFound) {
         return true;
       }
       return item === target;
@@ -358,8 +359,7 @@ var _ = { };
     
     setTimeout(function() {func.apply(this, args); }, wait);
   };
-
-
+  
   /**
    * ADVANCED COLLECTION OPERATIONS
    * ==============================
