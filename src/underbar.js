@@ -116,9 +116,10 @@ var _ = { };
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
-    for(var i = 0; i < array.length; i++) {
-      array[i] = iterator(array[i]);
-    }
+    
+    array.forEach(function(item, index) {
+      array[index] = iterator(item);
+    });
     
     return array;
   };
@@ -128,7 +129,7 @@ var _ = { };
    * values into a new array of values. _.pluck() is solved for you
    * as an example of this.
    */
-
+   
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
@@ -205,22 +206,22 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    
+	
     if(iterator === undefined) {
       iterator = _.identity;
     }
     
-    for(var i = 0; i < collection.length; i++) {
-      if(!(iterator(collection[i]))) {
+    return _.reduce(collection, function(accumulator, n) {
+      
+      if (typeof accumulator == "boolean" && accumulator === false) {    //do not evaluate if already found false;
         return false;
-        break;
+      }else {
+        if((iterator(n))) {
+          return true;
+        }
+        return false;
       }
-    }
-        
-    return true;
-    
-    //return _.reduce(collection, iterator, true);
-    //Does it make sense to use reduce()? -example: [true,false,true] return true because it iterates through whole array and returns last result
+    }, true);
     
     // TIP: Try re-using reduce() here.
   };
@@ -229,14 +230,20 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     
-    for(var i = 0; i < collection.length; i++) {
-      if(_.every([collection[i]], iterator)) {
-        return true;
-        break;
-      }
+    if(iterator === undefined) {
+        iterator = _.identity;
     }
     
-    return false;
+    var result = true;
+    
+    result = _.every(collection, function(n) {
+      if(iterator(n)) {                           //return opposite results, so we can use every
+          return false;
+        }
+        return true;
+    });
+    
+    return !result;
     
     // TIP: There's a very clever way to re-use every() here.
   };
@@ -374,7 +381,7 @@ var _ = { };
     var len = array.length
     var result = new Array(len);
     
-    for(var i = 0; i < len; i++) {
+    array.forEach(function(n) {
       var index = Math.floor(Math.random() * (len + 1));
       
       while(result[index] !== undefined) {
@@ -383,8 +390,10 @@ var _ = { };
           index = 0;
         }
       }
-      result[index] = array[i];
-    }
+      
+      result[index] = n;
+    });
+    
     return result;
   };
 
